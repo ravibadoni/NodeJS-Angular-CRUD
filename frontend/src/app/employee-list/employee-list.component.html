@@ -1,0 +1,181 @@
+<div class="container-xl">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>Manage <b>Employees</b></h2>
+          </div>
+          <div class="col-sm-6">
+            <a (click)="open(addEmployeeModal)" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus-circle"></i> <span>Add New Employee</span></a>
+            <a (click)="open(addFeedbackDialog)" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus-circle"></i> <span>Add New Feedback</span></a>
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th class="col-md-2">Name</th>
+          <th class="col-md-2">Email</th>
+          <th class="col-md-2">Department</th>
+          <th class="col-md-2">Phone</th>
+          <th class="col-md-4">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of employeeList$ | async">
+          <td>{{item.name}}</td>
+          <td>{{item.email}}</td>
+          <td>{{item.department}}</td>
+          <td>{{item.phone}}</td>
+          <td>
+            <a (click)="open(vieEmployee);selectedEmployee(item)" class="edit" data-toggle="modal"><i class="fa fa-eye"></i></a>
+            <a (click)="open(editEmployeeModal); selectedEmployee(item)" class="edit" data-toggle="modal"><i class="fa fa-edit"></i></a>
+            <a (click)="deleteEmployee(item.id)" class="delete" title="delete record"><i class="fa fa-trash-o"></i></a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!--Add Employee-->
+<ng-template #addEmployeeModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add New Employee</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="createEmployee" (ngSubmit)="addNewEmployee()">
+    <p class="alert-info">{{successAddMessage}}</p>
+  <div class="modal-body">
+      <div class="form-group">
+        <label>Name</label>
+        <input formControlName="name" type="text" class="form-control" required>
+        <small class="alert-danger" *ngIf="submitNewEmployee && createEmployee.controls['name'].errors">This field is required</small>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input formControlName="email" type="email" class="form-control" required>
+        <small class="alert-danger" *ngIf="submitNewEmployee && createEmployee.controls['email'].errors">This field is required</small>
+      </div>
+      <div class="form-group">
+        <label>Department</label>
+        <input formControlName="department" type="text" class="form-control" required>
+        <small class="alert-danger" *ngIf="submitNewEmployee && createEmployee.controls['department'].errors">This field is required</small>
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input formControlName="phone" type="text" class="form-control" required>
+        <small class="alert-danger" *ngIf="submitNewEmployee && createEmployee.controls['phone'].errors">This field is required</small>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <!--(click)="modal.close('Save click')"-->
+    <button type="submit" class="btn btn-outline-dark">Save</button>
+  </div>
+  </form>
+</ng-template>
+<!-- Edit Modal HTML -->
+<ng-template #editEmployeeModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Edit Employee</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+    <form [formGroup]="updateEmployee" (ngSubmit)="updateNewEmployee()">
+      <p class="alert-info">{{successUpdateMessage}}</p>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Name</label>
+          <input formControlName="name" type="text" class="form-control" required>
+          <small class="alert-danger" *ngIf="submitNewEmployee && updateEmployee.controls['name'].errors">This field is required</small>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input formControlName="email" type="email" class="form-control" required>
+          <small class="alert-danger" *ngIf="submitNewEmployee && updateEmployee.controls['email'].errors">This field is required</small>
+        </div>
+        <div class="form-group">
+          <label>Department</label>
+          <input formControlName="department" type="text" class="form-control" required>
+          <small class="alert-danger" *ngIf="submitNewEmployee && updateEmployee.controls['department'].errors">This field is required</small>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input formControlName="phone" type="text" class="form-control" required>
+          <small class="alert-danger" *ngIf="submitNewEmployee && updateEmployee.controls['phone'].errors">This field is required</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark">Save</button>
+      </div>
+    </form>
+</ng-template>
+<!--View Employee-->
+<ng-template #vieEmployee let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">View Employee</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label>Name</label>
+      {{selectedEmployeeDetails.name}}
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      {{selectedEmployeeDetails.email}}
+    </div>
+    <div class="form-group">
+      <label>Department</label>
+      {{selectedEmployeeDetails.department}}
+    </div>
+    <div class="form-group">
+      <label>Phone</label>
+      {{selectedEmployeeDetails.phone}}
+    </div>
+    <!--performanceReview-->
+    <div style="display: inline-flex;flex-wrap: wrap;gap: 10px">
+      <a type="button" (click)="modal.dismiss('Cross click')" [routerLink]="[ '/performance', selectedEmployeeDetails.id ]" class="btn btn-primary">View Performance Review</a>
+    </div>
+  </div>
+  <div class="modal-footer">
+  </div>
+</ng-template>
+<!--Add Feedback Popup-->
+
+<ng-template #addFeedbackDialog let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add New Employee</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="addFeedback" (ngSubmit)="addNewFeedback()">
+    <p class="alert-info">{{successFeedbackMessage}}</p>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Name</label>
+        <select formControlName="employeeId" class="form-select" aria-label="Default select example">
+          <option selected>Select</option>
+          <option *ngFor="let item of employeeList$ | async" value="{{item.id}}">{{item.name}}</option>
+        </select>
+        <small class="alert-danger" *ngIf="submitNewEmployee && addFeedback.controls['employeeId'].errors">This field is required</small>
+      </div>
+      <div class="form-group">
+        <label>Feedback</label>
+        <textarea class="form-control" formControlName="feedback" rows="4"></textarea>
+        <small class="alert-danger" *ngIf="submitNewEmployee && addFeedback.controls['feedback'].errors">This field is required</small>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!--(click)="modal.close('Save click')"-->
+      <button type="submit" class="btn btn-outline-dark">Save</button>
+    </div>
+  </form>
+</ng-template>

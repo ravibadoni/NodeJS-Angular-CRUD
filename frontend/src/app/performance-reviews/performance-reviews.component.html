@@ -1,0 +1,30 @@
+<div class="container-xl">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>Manage <b>Employees</b></h2>
+          </div>
+          <div class="col-sm-6">
+            <a [routerLink]="['/']" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus-circle"></i> <span>Go Back</span></a>
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th class="col-md-2">EmployeeId</th>
+          <th class="col-md-2">Feedback</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of performanceReviews$ | async">
+          <td>{{item.employeeId}}</td>
+          <td>{{item.review}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
